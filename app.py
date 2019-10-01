@@ -1,3 +1,4 @@
+
 from flask import Flask, jsonify, request
 import os
 import json
@@ -8,7 +9,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     a=os.environ['Authorization']
-    return "นางาว สิรยากร ทรงประกอบ เลขที่ 29 ชั้น ม.4/3"
+    return "นางสาว สิรยากร ทรงประกอบ เลขที่ 29 ชั้น ม.4/3"
 
 @app.route("/webhook", methods=['POST'])
 def webhook():
@@ -20,13 +21,15 @@ def callback():
     json_line = request.get_json()
     json_line = json.dumps(json_line)
     decoded = json.loads(json_line)
-    user = decoded["events"][0]['replyToken']
-    userText = decoded["events"][0]['message']['text']
+    user = decoded['originalDetectIntentRequest']['payload']['data']['replyToken']#user = decoded["events"][0]['replyToken']
+    userText = decoded['queryResult']['intent']['displayName']#userText = decoded["events"][0]['message']['text']
     #sendText(user,userText)
-    if (userText == 'สวัสดี') :
-        sendText(user,'ดีจ้าา')
+    if   (userText == 'สวัสดี') :
+        sendText(user,'ดีจ้า')
     elif (userText == 'อ้วนขึ้นหรอ') :
-        sendText(user,'จ้ากินเยอะไป')
+        sendText(user,'ใช่จ้ากินเยอะไป')
+    else :
+        sendText(user,'ไม่เข้าใจ อีกรอบนะ')
     return '',200
 
 def sendText(user, text):
